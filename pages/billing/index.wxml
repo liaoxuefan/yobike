@@ -1,0 +1,22 @@
+<!--pages/billing/index.wxml-->
+<view class="container">
+  <image class="bgImg" src="/images/bg.jpg"></image>
+  <view class="number">
+    <text>当前单车编号：{{number}}</text>
+  </view>
+  <view class="time {{isShow?'show':'hide'}}" >
+    <view class="time-title">
+      <text>{{billing}}</text>
+    </view>
+    <view class="time-content">
+      <text>{{hours}}:{{minutes}}:{{seconds}}</text>
+    </view>
+  </view>
+  <view class="endride {{isShow?'show':'hide'}}" >
+    <button type="warn" disabled="{{disabled}}" bindtap="endRide">结束骑行</button>
+    <button type="primary" bindtap="moveToIndex">回到地图</button>
+  </view>
+  <view class="startride {{isShow?'hide':'show'}}" >
+    <button type="primary" plain="true" bindtap="gobike">去骑行</button>
+  </view>
+</view>

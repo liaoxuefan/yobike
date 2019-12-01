@@ -1,0 +1,39 @@
+<!--pages/warn/index.wxml-->
+<view class="container">
+  <!-- 选择故障 -->
+  <view class="choose"> 
+    <view class="title">请选择故障类型</view>
+    <!-- 复选框 -->
+    <checkbox-group bindchange="checkboxChange" class="choose-grids">
+      <block wx:for="{{itemsValue}}" wx:key="{{item}}">
+        <view class="grid">
+          <checkbox value="{{item.value}}" checked="{{item.checked}}" color="{{item.color}}">{{item.value}}</checkbox>
+        </view>
+      </block>
+    </checkbox-group>
+  </view>
+  <!-- 填写具体信息并提交 -->
+  <view class="action">
+    <view class="title">拍摄单车周围环境，便于维修师傅找车</view>
+    <!-- 加入图片 -->
+    <view class="action-photo">
+      <block wx:for="{{picUrls}}" wx:key="{{item}}" wx:index="{{index}}">
+        <image src="{{item}}">
+          <icon type="cancel" data-index="{{index}}" color="red" size="18" class="del" bindtap="delPic"></icon>
+        </image>
+      </block>
+      <text class="add" bindtap="bindCamera">{{actionText}}</text>
+    </view>
+    <!-- 加入备注 -->
+    <view class="action-input">
+      <input bindinput="numberChange" name="number" placeholder="车牌号（车牌损坏不用填）"></input>
+      <input bindinput="descChange" name="desc" placeholder="备注"></input>
+    </view>
+    <!-- 提交 -->
+    <view class="action-submit">
+      <button class="sumbit-btn" type="default" loading="{{loading}}" bindtap="formSubmit" style="background-color:{{btnBgc}}">提交</button>
+    </view>
+  </view>
+  
+</view>
+

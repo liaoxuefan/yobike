@@ -1,0 +1,27 @@
+{
+  "pages": [
+    "pages/index/index",
+    
+    "pages/my/index",
+    "pages/warn/index",
+    "pages/billing/index",
+    
+    "pages/wallet/index",
+    "pages/recharge/index",
+    
+    "pages/logs/logs"
+  ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "小程序需要获取您的位置信息"
+    }
+  },
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#02A8E6",
+    "navigationBarTextStyle": "black"
+  },
+  
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

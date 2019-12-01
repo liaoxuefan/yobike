@@ -1,0 +1,61 @@
+/**index.wxss**/
+.location {
+  /* prettier-ignore */
+  font-size: 14PX;
+  /* prettier-ignore */
+  width: 52PX;
+  height: 100%;
+  
+  display: flex;
+  align-items: center;
+  color: #fff;
+  position: relative;
+  /* prettier-ignore */
+  padding-left: 10PX;
+}
+
+.location image{
+  height: 22px;
+  width: 22px;
+}
+
+
+
+.container{
+  position: relative;
+  width: 100%;
+  height: 100vh
+}
+#map{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%
+}
+.cover-view{
+  position: absolute;
+  bottom: 10%;
+  width: 100%;
+}
+
+
+.btn {
+  width: 80%;
+  color: white;
+  border-radius: 98rpx;
+  position: relative
+}
+
+.cover-image {
+  width: 100%;
+  height: 100%;
+}
+.txt{
+  position: absolute;
+  left: 50%;
+  top: 50%
+}
+

@@ -1,0 +1,85 @@
+/* pages/warn/index.wxss */
+.choose{
+  background-color: #fff;
+}
+
+.choose-grids{
+  display: flex;
+  /* 自动换行 */
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 50rpx
+}
+
+.choose-grids .grid{
+  width: 45%;
+  margin-top: 36rpx;
+  border-radius: 6rpx;
+  border: 2rpx solid rgb(27, 13, 230);
+  /* 水平垂直居中 */
+  text-align: center;
+  line-height: 100rpx;
+  height: 100rpx;
+}
+
+.action .action-photo{
+  background-color: #fff;
+  padding: 40rpx 0rpx 40rpx 50rpx
+}
+
+.action .action-photo image{
+  position: relative;
+  /* 行内元素变为块元素 */
+  display: inline-block;
+  width: 120rpx;
+  height: 120rpx;
+  /* 规定当内容溢出元素框时发生的事情 */
+  overflow: visible;
+  margin-left: 25rpx
+}
+
+.action .action-photo image .del{
+  display: block;
+  position: absolute;
+  top: -20rpx;
+  right: -20rpx
+}
+
+.action .action-photo .add{
+  display: inline-block;
+  width: 120rpx;
+  height: 120rpx;
+  line-height: 120rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #ccc;
+  border: 2rpx dotted #ccc;
+  margin-left: 25rpx;
+  vertical-align: top;
+}
+
+.action .action-input{
+  padding-left: 50rpx;
+  margin-top: 30rpx;
+  background-color: #fff;
+}
+
+.action .action-input input{
+  width: 90%;
+  padding-top: 40rpx;
+  padding-bottom: 40rpx;
+}
+
+.action .action-input input:first-child{
+  border-bottom: 2rpx solid #ccc;
+  padding-bottom: 20rpx;
+}
+
+.action .action-input input:last-child{
+  padding-top: 20rpx;
+}
+
+.action .action-submit{
+  padding: 40rpx 40rpx;
+  background-color: #f2f2f2;
+}

@@ -1,0 +1,18 @@
+<!--index.wxml-->
+
+<view class="container">
+  <navBar title='你的单车'  >
+    <view class='location' slot="left">
+        <image src="/images/person.png"></image>
+        
+    </view>
+  </navBar>
+
+  <map id="map" latitude="{{latitude}}" longitude="{{longitude}}" scale="{{scale}}"       show-location="{{true}}"    
+  controls="{{controls}}" bindcontroltap="bindcontroltap" 
+  polyline="{{polyline}}" markers="{{markers}}" bindmarkertap="bindmarkertap"
+  bindregionchange="bindregionchange"
+  >
+    
+  </map>
+</view>
