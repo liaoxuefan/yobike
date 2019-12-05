@@ -3,7 +3,7 @@
 <view class="container">
   <navBar title='你的单车'  >
     <view class='location' slot="left">
-        <image src="/images/person.png"></image>
+        <image src="/images/person.png" bindtap="myMessage"></image>
         
     </view>
   </navBar>

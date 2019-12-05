@@ -1,4 +1,19 @@
 /* pages/my/index.wxss */
+.l-active-class{
+  font-size:35rpx !important;
+}
+
+.placeholder{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 100rpx 
+}
+
+.tabs{
+  width: 100%;
+}
+
 .user-info{
   background-color: #fff;
   padding-top: 60rpx 

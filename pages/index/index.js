@@ -177,6 +177,12 @@ Page({
     }
   },
 
+  myMessage: function(){
+    wx.navigateTo({
+      url: '../my/index',
+    });
+  },
+
   onShow: function(){
     //创建地图上下文，移动当前位置到地图中心
     this.mapCtx = wx.createMapContext("map");

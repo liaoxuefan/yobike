@@ -6,11 +6,26 @@
     </block>
     <text>{{userInfo.nickName}}</text>
   </view>
-  <block wx:if="{{userInfo.avatarUrl != ''}}">
-    <view class="mywallet tapbar">
-      <text>我的钱包</text>
-      <image src="/images/arrow_right.png" style="width: 45rpx;height: 45rpx" bindtap="movetoWallet"></image>
-    </view>
-  </block>
-  <button bindtap="bindAction" class="btn-login" hover-class="gray" type="{{bType}}">{{actionText}}</button>
+  <view class="tabs">
+    <l-tabs bind:linchange="changeTabs" active-color="#2c61b4" inactive-color="#333" l-active-class="l-active-class"  l-content-class="l-content-class">
+      <l-tabpanel tab="骑行权益" key="one" slot="one">
+        <view class="tab-content">
+          <block wx:if="{{userInfo.avatarUrl != ''}}">
+            <view class="tapbar" bindtap="movetoWallet">
+              <text>我的钱包</text>
+              <image src="/images/arrow_right.png" style="width: 45rpx;height: 45rpx" ></image>
+            </view>
+          </block>
+          <button lang="zh_CN" bindgetuserinfo="bindAction" class="btn-login" hover-class="gray" type="{{bType}}" open-type="getUserInfo">{{actionText}}</button>
+        </view>
+      </l-tabpanel>
+      <l-tabpanel tab="行程记录" key="two" slot="two">
+        <view class="tab-content">
+          <view class="placeholder">暂无骑行记录</view>
+        </view>
+      </l-tabpanel>
+    </l-tabs>
+  </view>
+  
+  
 </view>

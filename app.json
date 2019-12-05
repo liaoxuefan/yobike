@@ -1,8 +1,8 @@
 {
   "pages": [
+    "pages/my/index",
     "pages/index/index",
     
-    "pages/my/index",
     "pages/warn/index",
     "pages/billing/index",
     
@@ -22,6 +22,5 @@
     "navigationBarTextStyle": "black"
   },
   
-  "style": "v2",
   "sitemapLocation": "sitemap.json"
 }
