@@ -1,13 +1,13 @@
 {
   "pages": [
-    "pages/my/index",
     "pages/index/index",
+    "pages/recharge/index",
+    "pages/wallet/index",
+    "pages/my/index",
     
     "pages/warn/index",
     "pages/billing/index",
     
-    "pages/wallet/index",
-    "pages/recharge/index",
     
     "pages/logs/logs"
   ],

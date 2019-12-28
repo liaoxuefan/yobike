@@ -8,7 +8,7 @@
     </view>
   </navBar>
 
-  <map id="map" latitude="{{latitude}}" longitude="{{longitude}}" scale="{{scale}}"       show-location="{{true}}"    
+  <map id="map" latitude="{{latitude}}" longitude="{{longitude}}" scale="{{scale}}"       show-location="true"    
   controls="{{controls}}" bindcontroltap="bindcontroltap" 
   polyline="{{polyline}}" markers="{{markers}}" bindmarkertap="bindmarkertap"
   bindregionchange="bindregionchange"

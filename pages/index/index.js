@@ -6,7 +6,9 @@ Page({
   data: {
     scale: 18,
     latitude: 0,
-    longitude: 0
+    longitude: 0,
+    markers: [],
+    _markers: []
   },
 
   //事件处理函数
@@ -28,6 +30,7 @@ Page({
           latitude: res.latitude,
           longitude: res.longitude
         })
+        
       },
     })
 
@@ -68,6 +71,17 @@ Page({
               height: 20
             },
             clickable: true
+          },
+          {
+            id: 4,
+            iconPath: '/images/center_icon.png',
+            position: {
+              left: res.windowWidth/2 - 23/2,
+              top: res.windowHeight/2 - 44.5,
+              width: 23,
+              height: 44.5
+            },
+            clickable: true
           }]
         });
       }
@@ -75,12 +89,26 @@ Page({
 
     //4.请求服务器，显示附近的单车，用marker标记
     wx.request({
-      url: 'https://www.easy-mock.com/mock/5dd53696151112721f49f1b9/example/',
-      data: {},
+      url: 'http://192.168.1.103:8080/bike/showNear',
+      data: {
+        x: this.data.longitude, 
+        y: this.data.latitude
+      },
       method: 'GET',
       success: (res) => {
+        console.log(res)
+        var bikes = res.data.map((bike) => {
+          return {
+            longitude: bike.location[0],
+            latitude: bike.location[1],
+            id: bike.id.timestamp,
+            iconPath: '/images/markers.png',
+            width: 30,
+            height: 30
+          }
+        })       
         this.setData({
-          markers: res.data.data
+          markers: bikes
         })
       }
     })
@@ -110,23 +138,38 @@ Page({
 
   //拖动地图事件
   bindregionchange: function(e){
-    console.log(e);
     //拖动地图，获取附近单车位置
     if(e.type == "begin"){
-      wx.request({
-        url: 'https://www.easy-mock.com/mock/5dd53696151112721f49f1b9/example/',
-        data: {},
+      
+    }else if(e.type == "end"){
+      this.mapCtx.getCenterLocation({
         success: (res) => {
-          this.setData({
-            _markers: res.data.data
+          wx.request({
+            url: 'http://192.168.1.103:8080/bike/showNear',
+            method: 'GET',
+            data: {
+              x: res.longitude, 
+              y: res.latitude
+            },
+            success: (res) => {
+              var bikes = res.data.map((bike) => {
+                return {
+                  longitude: bike.location[0],
+                  latitude: bike.location[1],
+                  id: bike.id.timestamp,
+                  iconPath: '/images/markers.png',
+                  width: 30,
+                  height: 30
+                }
+              })
+              this.setData({
+                markers: bikes
+              })
+            }
           })
         }
       })
-    }else if(e.type == "end"){
-      //停止拖动
-      this.setData({
-        markers: this.data._markers
-      })
+      
     }
   },
 
@@ -174,6 +217,45 @@ Page({
         url: '../warn/index',
       });
       break;
+      //手动添加单车
+      case 4: 
+        this.mapCtx.getCenterLocation({
+          success: (res) => {
+            wx.request({
+              url: 'http://192.168.1.103:8080/bike/add',
+              method: 'POST',
+              data: {
+                location: [res.longitude, res.latitude]
+              }
+            })
+            console.log("add a bike")
+            wx.request({
+              url: 'http://192.168.1.103:8080/bike/showNear',
+              method: 'GET',
+              data: {
+                x: res.longitude, 
+                y: res.latitude
+              },
+              success: (res) => {
+                var bikes = res.data.map((bike) => {
+                  return {
+                    longitude: bike.location[0],
+                    latitude: bike.location[1],
+                    id: bike.id.timestamp,
+                    iconPath: '/images/markers.png',
+                    width: 30,
+                    height: 30
+                  }
+                })
+                this.setData({
+                  markers: bikes
+                })
+              }
+            })
+          }
+        })
+        
+        break;
     }
   },
 
