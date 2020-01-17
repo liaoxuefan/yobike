@@ -6,6 +6,7 @@ Page({
    */
   data: {
     isShow: false,
+    isPay: "回到地图",
     hours: 0,
     minutes: 0,
     seconds: 0,
@@ -18,10 +19,12 @@ Page({
   onLoad: function (options) {
     //timer: (this.timer === undefined)?"":this.timer
     this.setData({
-      number: 15979,
-      
+      number: options.number,
+      timer: this.timer,
+      id: options.id
     })
-    
+    //直接计时
+    this.gobike();
     
   },
 
@@ -66,22 +69,39 @@ Page({
     this.timer = "";
     this.setData({
       billing: "本次骑行耗时",
-      disabled: true
+      disabled: true,
+      isPay: "去支付"
     })
+    
+    
   },
 
   //返回地图
   moveToIndex: function(){
-    if(this.timer == ""){
-      wx.redirectTo({
-        url: '../index/index',
-      })
-    }else{
+     
+    if(this.data.isPay == "回到地图"){
       //保留计费页跳到地图，并保存计时器状态
       wx.navigateTo({
-        url: '../index/index?timer='+this.timer,
+        url: '../index/index?timer=' + this.timer,
+      })
+    }else{
+      //支付扣款
+      wx.request({
+        url: '',
+      })
+      //单车isShow改为0
+      wx.request({
+        url: 'http://192.168.43.47:8080/bike/change?tp=1&id=' + this.data.id,
       })
     }
+      
+    
+  },
+
+  myMessage: function () {
+    wx.navigateTo({
+      url: '../my/index',
+    });
   },
 
   /**

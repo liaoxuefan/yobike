@@ -88,6 +88,30 @@ Page({
               title: '正在登录',
             })
             this.getuserinfoAndset();
+            wx.login({
+              success(res) {
+                if (res.code) {
+                  //发起网络请求
+                  wx.request({
+                    url: 'http://192.168.43.47:8080/login',
+                    method: "GET",
+                    data: {
+                      code: res.code
+                    },
+                    success: (res) => {
+                      //设置token
+                      var openid = res.data;
+                      wx.setStorage({
+                        key: 'token',
+                        data: openid,
+                      })
+                    }
+                  })
+                } else {
+                  console.log('登录失败！' + res.errMsg)
+                }
+              }
+            })
           } else {//没有授权
             console.log("auth start");
             wx.authorize({
@@ -99,6 +123,8 @@ Page({
                   title: '正在登录',
                 })
                 this.getuserinfoAndset();
+                //获取code，进而获取用户唯一标识openid
+                
               }
             })
           }
@@ -123,6 +149,7 @@ Page({
               key: 'userInfo',
               success: function(res) {},
             });
+            wx.removeStorageSync('token');
             this.setData({
               userInfo: {
                 avatarUrl: "",

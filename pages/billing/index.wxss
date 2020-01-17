@@ -1,4 +1,6 @@
 /* pages/billing/index.wxss */
+@import "../index/index.wxss";
+
 .container{
   position: relative;
   width: 100%;

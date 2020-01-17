@@ -89,14 +89,14 @@ Page({
 
     //4.请求服务器，显示附近的单车，用marker标记
     wx.request({
-      url: 'http://192.168.1.103:8080/bike/showNear',
+      url: 'http://192.168.43.47:8080/bike/showNear',
       data: {
         x: this.data.longitude, 
         y: this.data.latitude
       },
       method: 'GET',
       success: (res) => {
-        console.log(res)
+        //console.log(res)
         var bikes = res.data.map((bike) => {
           return {
             longitude: bike.location[0],
@@ -145,7 +145,7 @@ Page({
       this.mapCtx.getCenterLocation({
         success: (res) => {
           wx.request({
-            url: 'http://192.168.1.103:8080/bike/showNear',
+            url: 'http://192.168.43.47:8080/bike/showNear',
             method: 'GET',
             data: {
               x: res.longitude, 
@@ -177,41 +177,99 @@ Page({
     switch(e.controlId){
       case 2:this.movetoPosition();
       break;
-      case 1: if(this.timer === "" || this.timer === undefined){
-        //没有在计费就扫码
-        wx.scanCode({
-          success: (res) => {
-            //获取密码和车号
-            wx.showLoading({
-              title: '正在开锁',
-              mask: true
-            })
-            wx.request({
-              url: '',
-              data: {},
-              method: 'GET',
-              success: function(res){
-                wx.hideLoading();
-                //携带密码和车号跳转到计费页
-                wx.redirectTo({
-                  url: '../billing/index?password=' + res.data.data.password,
-                  success: function(res){
-                    wx.showToast({
-                      title: '开锁成功',
-                      duration: 1000
-                    })
-                  }
-                });
-              }
-            })
-          }
+      case 1: 
+      //token是否存在
+      var openid;
+
+      openid = wx.getStorageSync('token');
+      //openid是个string
+      console.log(openid)
+      if(openid === ''){
+        wx.navigateTo({
+          url: '../my/index',
         })
       }else{
-        //回退上一页
-        wx.navigateBack({
-          delta: 1
+        //是否有押金
+        wx.request({
+          url: 'http://192.168.43.47:8080/use',
+          header: {
+            'content-type': 'application/json',
+            'cookie': "openid="+openid
+          },
+          success: (res) => {
+            console.log(res);
+            if (res.data === "未交押金") {
+              wx.navigateTo({
+                url: '../wallet/index',
+              });
+            }else{
+              if (this.timer === "" || this.timer === undefined) {
+                //没有在计费就扫码
+                wx.scanCode({
+                  success: (res) => {
+                    console.log(res)
+                    var number = res.result.substring(res.result.length - 24);
+                    wx.request({
+                      url: res.result,
+                      success: (res) => {
+                        console.log(res);
+                        var title = res.data;
+                        if (title === "二维码错误" || title === "此单车正在被使用" || title === "此单车被保修，暂不可使用") {
+                          wx.showToast({
+                            title: title,
+                            duration: 2000
+                          })
+                        } else {
+                          var pwd = res.data.password;
+                          var no = res.data.id.timestamp;
+                          wx.showModal({
+                            title: '确认使用？',
+                            content: '确认后将开始计费',
+                            success(res) {
+                              if (res.confirm) {
+                                //获取密码和车号
+                                wx.showLoading({
+                                  title: '正在开锁',
+                                  mask: true
+                                })
+                                wx.hideLoading();
+                                //单车isShow改为1
+                                wx.request({
+                                  url: 'http://192.168.43.47:8080/bike/change?tp=0&id='+number,
+                                })
+                                //携带密码和车号跳转到计费页
+                                wx.redirectTo({
+                                  url: '../billing/index?password=' + pwd + '&number=' + no + '&id=' + number,
+                                  success: function (res) {
+                                    wx.showToast({
+                                      title: '开锁成功',
+                                      icon: 'none',
+                                      duration: 1000
+                                    })
+                                  }
+                                });
+                              }
+                            }
+                          })
+                        }
+                      }
+                    })                   
+
+
+                  }
+                })
+              } else {
+                //回退上一页
+                wx.navigateBack({
+                  delta: 1
+                })
+              }
+            }
+          }
         })
+        
       }
+      
       break;
       case 3: wx.navigateTo({
         url: '../warn/index',
@@ -222,7 +280,7 @@ Page({
         this.mapCtx.getCenterLocation({
           success: (res) => {
             wx.request({
-              url: 'http://192.168.1.103:8080/bike/add',
+              url: 'http://192.168.43.47:8080/bike/add',
               method: 'POST',
               data: {
                 location: [res.longitude, res.latitude]
@@ -230,7 +288,7 @@ Page({
             })
             console.log("add a bike")
             wx.request({
-              url: 'http://192.168.1.103:8080/bike/showNear',
+              url: 'http://192.168.43.47:8080/bike/showNear',
               method: 'GET',
               data: {
                 x: res.longitude, 

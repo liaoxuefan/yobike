@@ -1,5 +1,11 @@
 <!--pages/billing/index.wxml-->
 <view class="container">
+  <navBar>
+    <view class='location' slot="left">
+        <image src="/images/person.png" bindtap="myMessage"></image>
+        
+    </view>
+  </navBar>
   <image class="bgImg" src="/images/bg.jpg"></image>
   <view class="number">
     <text>当前单车编号：{{number}}</text>
@@ -13,10 +19,11 @@
     </view>
   </view>
   <view class="endride {{isShow?'show':'hide'}}" >
+    
     <button type="warn" disabled="{{disabled}}" bindtap="endRide">结束骑行</button>
-    <button type="primary" bindtap="moveToIndex">回到地图</button>
+    <button type="primary" bindtap="moveToIndex">{{isPay}}</button>
   </view>
-  <view class="startride {{isShow?'hide':'show'}}" >
+  <!-- <view class="startride {{isShow?'hide':'show'}}" >
     <button type="primary" plain="true" bindtap="gobike">去骑行</button>
-  </view>
+  </view> -->
 </view>
