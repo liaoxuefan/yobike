@@ -1,0 +1,7 @@
+<!--pages/record/index.wxml-->
+<view class="container">
+  <map id="map" latitude="{{latitude}}" longitude="{{longitude}}" scale="16"
+  polyline="{{polyline}}" markers="{{markers}}" 
+  >
+  </map>
+</view>

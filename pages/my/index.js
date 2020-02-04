@@ -13,6 +13,7 @@ Page({
     bType: "primary",
     actionText: "登录",
     lock: false, //登录按钮状态
+    records: [],
   },
 
   /**
@@ -39,6 +40,53 @@ Page({
         }
       }
     })
+
+    //行程记录
+    var token = wx.getStorageSync('token');
+    if (token != '') {
+      wx.request({
+        url: 'http://192.168.1.105:8080/ride/show?user_id=' + token,
+        method: 'GET',
+        success: (res) => {
+          
+          var arr = [];
+          for(var obj of res.data){
+            
+            let o = {
+              date: this.formatDate(new Date(obj.startTime*1000)),
+              time: this.getTime(obj.endTime - obj.startTime),
+              price: obj.price,
+              start_time: obj.startTime,
+              end_time: obj.endTime
+            }
+            console.log(o);
+            arr.push(o);
+            console.log(arr);
+          }
+          this.setData({
+            records: arr
+          })
+        }
+      })
+    }
+  },
+
+  getTime: function(remain){
+    let h = parseInt(remain/60/60%24);
+    let m = parseInt(remain/60%60);
+    let s = parseInt(remain % 60);
+    
+    return h+'时'+m+'分'+s+'秒';
+  },
+
+  formatDate: function(now) {
+    var year = now.getFullYear();  //取得4位数的年份
+    var month = now.getMonth() + 1;  //取得日期中的月份，其中0表示1月，11表示12月
+    var date = now.getDate();      //返回日期月份中的天数（1到31）
+    var hour = now.getHours();     //返回日期中的小时数（0到23）
+    var minute = now.getMinutes(); //返回日期中的分钟数（0到59）
+    var second = now.getSeconds(); //返回日期中的秒数（0到59）
+    return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
   },
 
   //获取用户信息并存缓存
@@ -93,7 +141,7 @@ Page({
                 if (res.code) {
                   //发起网络请求
                   wx.request({
-                    url: 'http://192.168.43.47:8080/login',
+                    url: 'http://192.168.1.105:8080/login',
                     method: "GET",
                     data: {
                       code: res.code
@@ -104,6 +152,33 @@ Page({
                       wx.setStorage({
                         key: 'token',
                         data: openid,
+                      })
+                      //设置余额及押金
+                      wx.request({
+                        url: 'http://192.168.1.105:8080/user',
+                        header: {
+                          'content-type': 'application/json',
+                          'cookie': "openid=" + openid
+                        },
+                        success: (res) => {
+                          console.log(res);
+                          wx.setStorage({
+                            key: 'balance',
+                            data: res.data.balance,
+                          })
+                          if (res.data.guarantee == 99) {
+                            wx.setStorage({
+                              key: 'guarantee',
+                              data: '99元，点击退款',
+                            })
+                          } else {
+                            wx.setStorage({
+                              key: 'guarantee',
+                              data: '99元，未交押金',
+                            })
+                          }
+
+                        }
                       })
                     }
                   })
@@ -166,9 +241,20 @@ Page({
   },
 
   //钱包
-  movetoWallet: function(){
+  movetoWallet: function(e){
+    
     wx.navigateTo({
       url: '../wallet/index',
+    })
+  },
+
+  //记录
+  movetoRecord: function (e) {
+    let id = e.currentTarget.dataset.id;
+    let st = this.data.records[id].start_time;
+    let et = this.data.records[id].end_time;
+    wx.navigateTo({
+      url: '../record/index?start_time=' + st + '&end_time=' + et,
     })
   },
 
@@ -176,14 +262,14 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-
+    
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    
   },
 
   /**

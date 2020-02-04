@@ -7,7 +7,7 @@
     
     "pages/warn/index",
     "pages/billing/index",
-    
+    "pages/record/index",
     
     "pages/logs/logs"
   ],

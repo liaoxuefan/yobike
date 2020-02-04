@@ -89,7 +89,7 @@ Page({
 
     //4.请求服务器，显示附近的单车，用marker标记
     wx.request({
-      url: 'http://192.168.43.47:8080/bike/showNear',
+      url: 'http://192.168.1.105:8080/bike/showNear',
       data: {
         x: this.data.longitude, 
         y: this.data.latitude
@@ -145,7 +145,7 @@ Page({
       this.mapCtx.getCenterLocation({
         success: (res) => {
           wx.request({
-            url: 'http://192.168.43.47:8080/bike/showNear',
+            url: 'http://192.168.1.105:8080/bike/showNear',
             method: 'GET',
             data: {
               x: res.longitude, 
@@ -191,7 +191,7 @@ Page({
       }else{
         //是否有押金
         wx.request({
-          url: 'http://192.168.43.47:8080/use',
+          url: 'http://192.168.1.105:8080/use',
           header: {
             'content-type': 'application/json',
             'cookie': "openid="+openid
@@ -235,7 +235,7 @@ Page({
                                 wx.hideLoading();
                                 //单车isShow改为1
                                 wx.request({
-                                  url: 'http://192.168.43.47:8080/bike/change?tp=0&id='+number,
+                                  url: 'http://192.168.1.105:8080/bike/change?tp=0&id='+number,
                                 })
                                 //携带密码和车号跳转到计费页
                                 wx.redirectTo({
@@ -271,16 +271,23 @@ Page({
       }
       
       break;
-      case 3: wx.navigateTo({
-        url: '../warn/index',
-      });
+      case 3: 
+      if(wx.getStorageSync("token") === ''){
+        wx.navigateTo({
+          url: '../my/index',
+        })
+      }else{
+        wx.navigateTo({
+          url: '../warn/index',
+        });
+      }     
       break;
       //手动添加单车
       case 4: 
         this.mapCtx.getCenterLocation({
           success: (res) => {
             wx.request({
-              url: 'http://192.168.43.47:8080/bike/add',
+              url: 'http://192.168.1.105:8080/bike/add',
               method: 'POST',
               data: {
                 location: [res.longitude, res.latitude]
@@ -288,7 +295,7 @@ Page({
             })
             console.log("add a bike")
             wx.request({
-              url: 'http://192.168.43.47:8080/bike/showNear',
+              url: 'http://192.168.1.105:8080/bike/showNear',
               method: 'GET',
               data: {
                 x: res.longitude, 

@@ -5,6 +5,8 @@ Page({
    * 页面的初始数据
    */
   data: {
+    x: 0,
+    y: 0,
     picUrls: [],
     inputValue: {
       num: 0,
@@ -67,13 +69,23 @@ Page({
     wx.setNavigationBarTitle({
       title: '报障维修',
     })
+    wx.getLocation({
+      type: "gcj02",
+      success: (res) => {
+        this.setData({
+          y: res.latitude,
+          x: res.longitude
+        })
+
+      },
+    })
   },
 
   /**
    * 勾选故障类型
    */
   checkboxChange: function(e){
-    console.log(e);
+    
     let _values = e.detail.value;
     if(_values.length == 0){
       this.setData({
@@ -84,6 +96,7 @@ Page({
         checkboxValue: _values,
         btnBgc: "#b9dd08"
       })
+      //console.log(this.data.checkboxValue);
     }
   },
   //输入事件
@@ -128,7 +141,7 @@ Page({
 
   //删除图片
   delPic: function(e){
-    console.log(e);
+    //console.log(e);
     let index = e.target.dataset.index;
     let _picUrls = this.data.picUrls;
     _picUrls.splice(index,1);
@@ -139,18 +152,26 @@ Page({
 
   //提交到服务器
   formSubmit: function(e){
+    
+    
     if(this.data.checkboxValue.length>0){
       wx.request({
-        url: 'https://www.easy-mock.com/mock/59098d007a878d73716e966f/ofodata/msg',
+        url: 'http://192.168.1.105:8080/bike/trouble',
         data: {
-
+          picUrls: this.data.picUrls,
+          inputValue: this.data.inputValue,          
+          checkboxValue: this.data.checkboxValue,
+          openid: wx.getStorageSync("token"),
+          x: this.data.x,
+          y: this.data.y
         },
-        method: 'get',
+        method: 'GET',
         success: function(res){
           //消息提示框
+          console.log(res);
           wx.showToast({
-            title: res.data.data.msg,
-            icon: 'success',
+            title: res.data,
+            icon: 'none',
             duration: 2000
           })
         }

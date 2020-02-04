@@ -5,16 +5,16 @@
       <text class="banlance-head">我的余额（元）</text>
     </view>
     <view>
-      <text class="banlance-amount">{{banlance}}</text>
+      <text class="banlance-amount">{{balance}}</text>
     </view>
     <view>
-      <text class="banlance-desc" bindtap="banlanceDesc">余额说明</text>
+      <text class="banlance-desc" bindtap="balanceDesc">余额说明</text>
     </view>
   </view>
   <button bindtap="movetoRecharge" class="btn-charge">充值</button>
   <view bindtap="showDeposit" class="my-deposit tapbar">
     <text>我的押金</text>
-    <text><text class="c-y">{{deposit}}</text>></text>
+    <text><text class="c-y">{{guarantee}}</text>></text>
   </view>
   <view bindtap="showAbout" class="about tapbar">
     <text>关于yobike</text>

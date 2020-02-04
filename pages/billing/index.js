@@ -11,6 +11,7 @@ Page({
     minutes: 0,
     seconds: 0,
     billing: "正在计费",
+    positions: []
   },
 
   /**
@@ -26,6 +27,28 @@ Page({
     //直接计时
     this.gobike();
     
+  },
+  //上传位置
+  uploadLocation: function(){
+    this.timer = setInterval(() => {
+      wx.getLocation({
+        type: 'gcj02',
+        success:(res) => {
+          var arr = this.data.positions;
+          var obj = {
+            "entity_name":"user"+wx.getStorageSync("token"),
+            "loc_time":Date.parse(new Date())/1000,
+            "latitude":res.latitude,
+            "longitude":res.longitude,
+            "coord_type_input":"gcj02"  
+          }
+          arr.push(obj);
+          this.setData({
+            positions: arr
+          })
+        }
+      })
+    }, 10000)
   },
 
   //去骑行
@@ -72,7 +95,49 @@ Page({
       disabled: true,
       isPay: "去支付"
     })
-    
+    //请求百度鹰眼
+    wx.getLocation({
+      type: 'gcj02',
+      success: (res) => {
+        var arr = this.data.positions;
+        var obj = {
+          "entity_name": "user" + wx.getStorageSync("token"),
+          "loc_time": Date.parse(new Date()) / 1000,
+          "latitude": res.latitude,
+          "longitude": res.longitude,
+          "coord_type_input": "gcj02"
+        }
+        arr.push(obj);
+        this.setData({
+          positions: arr
+        })
+      }
+    })
+    wx.request({
+      url: 'http://yingyan.baidu.com/api/v3/track/addpoints',
+      method: 'POST',
+      data: {
+        ak: '5A4eSdK6aXXeZjhmGxKTnxXy65hnAmG4',
+        service_id: 219089,
+        point_list: this.data.positions
+      },
+      success: (res) => {
+        console.log(res);
+      }
+    })
+    wx.request({
+      url: 'http://192.168.1.105:8080/ride/add',
+      method: 'POST',
+      data: {
+        bike_id: this.data.id,//ObjectId
+        user_id: wx.getStorageSync("token"),
+        start_time: this.data.positions[0].loc_time,
+        end_time: Date.parse(new Date()) / 1000
+      },
+      success: (res) => {
+        console.log(res);
+      }
+    })
     
   },
 
@@ -91,7 +156,7 @@ Page({
       })
       //单车isShow改为0
       wx.request({
-        url: 'http://192.168.43.47:8080/bike/change?tp=1&id=' + this.data.id,
+        url: 'http://192.168.1.105:8080/bike/change?tp=1&id=' + this.data.id,
       })
     }
       
